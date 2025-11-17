@@ -116,16 +116,17 @@ def main(argv=sys.argv):
     if args.config_file is not None:
         ruff_argv.extend(['--config', args.config_file])
 
+    ruff_argv.append('--')
     ruff_argv.extend(args.paths)
 
     out_check = subprocess.run(
-        ['ruff', 'check', *ruff_argv, '--diff'], capture_output=True, text=True
+        ['ruff', 'check', '--diff', *ruff_argv], capture_output=True, text=True
     )
     out_format = subprocess.run(
-        ['ruff', 'format', *ruff_argv, '--diff'], capture_output=True, text=True
+        ['ruff', 'format', '--diff', *ruff_argv], capture_output=True, text=True
     )
     ruff_find_files = subprocess.run(
-        ['ruff', 'check', *ruff_argv, '--show-files'], capture_output=True, text=True
+        ['ruff', 'check', '--show-files', *ruff_argv], capture_output=True, text=True
     )
     patches = PatchSet(out_check.stdout)
     patches += PatchSet(out_format.stdout)
@@ -142,7 +143,7 @@ def main(argv=sys.argv):
 
     if args.reformat:
         res_format = subprocess.run(['ruff', 'format', *ruff_argv], capture_output=True)
-        res_check = subprocess.run(['ruff', 'check', *ruff_argv, '--fix'], capture_output=True)
+        res_check = subprocess.run(['ruff', 'check', '--fix', *ruff_argv], capture_output=True)
         success = (res_check.returncode == 0) and (res_format.returncode == 0)
         if success:
             print(
