@@ -76,7 +76,7 @@ def get_xunit_content(report, name, duration, checked_files):
     return xml
 
 
-def main(argv=sys.argv):
+def main(argv=sys.argv[1:]):
     parser = argparse.ArgumentParser(
         description='Check or format python code using ruff',
     )
@@ -105,7 +105,7 @@ def main(argv=sys.argv):
     )
 
     argcomplete.autocomplete(parser)
-    args = parser.parse_args(sys.argv[1:])
+    args = parser.parse_args(argv)
     if args.config_file is not None and not os.path.exists(args.config_file):
         print(f'Could not find the config file {args.config_file}', file=sys.stderr)
         return 1
